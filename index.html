@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ROS Page</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+		table, th, tr, td {
+			margin:10px 0;
+            border:solid 1px #333;
+            padding:2px 4px;
+            font:10px Verdana;
+			border-style: solid
+        }
+        th {
+            font-weight:bold;
+			background-color: khaki;
+        }
+		.page .mainButtons {
+			padding: 5px 0px 5px 0px;
+		}
+		.page .cdButtons {
+			padding: 5px 0px 5px 0px;
+		}
+		.page {
+			position: -webkit-sticky;
+			position: fixed;
+			right: 0;
+			top: 0;
+			display: inline-block
+		}
+		.list {
+			width: 75%;
+			-moz-column-count: 5;
+			-webkit-column-count: 5;
+			column-count: 5;
+		}
+    </style>
+</head>
+<body onLoad="CreateTableFromJSON()">
+	<div class="list">
+		<div id="showData" class="grid"></div>
+	</div>
+	<div class="page">
+		<div class="mainButtons">
+			<button id="copyButton">Copy Text</button>
+			<button id="clearButton">Clear</button>
+			<br>
+		</div>
+		<!--
+		<div class="cdButtons">
+			<button id="cvButton">CV ROS</button>
+			<button id="dmButton">DM ROS</button>
+		</div>
+		-->
+		<div class="box">
+			<textarea id="msgbox" rows="30" cols="35"></textarea>
+		</div>
+	</div>
+</body>
+
+<script>
+	var table;		// global table
+	var myRos; 		// global myRos array
+	var msg; 
+	
+    function CreateTableFromJSON() {	
+		myRos = [
+			{
+				"name":"General",
+				"items":
+				[
+					"fever",
+					"weight loss",
+					"weight gain",
+					"fatigue",
+					"weakness",
+					"chills",
+					"night sweats",
+					"anorexia",
+					"snoring",
+					"myalgias",
+					"excessive sweating"
+					
+				]
+			},
+			{
+				"name":"Eyes",
+				"items":
+				[
+					"blurry vision",
+					"loss of vision",
+					"diplopia",
+					"eye pain",
+					"eye redness",
+					"excessive tearing",
+					"dry eyes",
+					"photophobia"
+				]
+			},
+			{
+				"name":"ENT",
+				"items":
+				[
+					"loss of hearing",
+					"tinnitus",
+					"ear pain",
+					"ear discharge",
+					"vertigo",
+					"rhinorrhea",
+					"nasal congestion",
+					"post nasal discharge",
+					"epistaxis",
+					"bleeding gums",
+					"sore tongue",
+					"sore throat",
+					"hoarseness",
+					"mouth lesions",
+					"toothache"
+				]
+			},
+			{
+				"name":"Cardiovascular",
+				"items":
+				[
+					"chest pain",
+					"palpitations",
+					"shortness of breath",
+					"dyspnea on exertion",
+					"orthopnea",
+					"paroxysmal noct dyspnea",
+					"edema",
+					"claudication",
+					"blood pressure problems"
+				]
+			},
+			{
+				"name":"Respiratory",
+				"items":
+				[
+					"cough",
+					"shortness of breath",
+					"wheezing",
+					"productive cough",
+					"hemoptysis"
+				]
+			},
+			{
+				"name":"Gastrointestinal",
+				"items":
+				[
+					"abdominal pain",
+					"nausea",
+					"vomiting",
+					"diarrhea",
+					"constipation",
+					"heartburn",
+					"hematemesis",
+					"melena",
+					"jaundice",
+					"rectal bleeding",
+					"dysphagia"
+				]
+			},
+			{
+				"name":"Genitourinary",
+				"items":
+				[
+					"dysuria",
+					"urgency",
+					"frequency",
+					"hematuria",
+					"nocturia",
+					"incontinence",
+					"hesitancy",
+					"decreased libido"
+				]
+			},
+			{
+				"name":"Female",
+				"items":
+				[
+					"amenorrhea",
+					"irregular menses",
+					"menorrhagia",
+					"dyspareunia",
+					"post-coital bleeding",
+					"hot flashes",
+					"vaginal discharge",
+					"pelvic pain",
+					"vaginal itching",
+					"dysmenorrhea",
+					"breast pain",
+					"breast lump",
+					"nipple discharge"
+				]
+			},
+			{
+				"name":"Male",
+				"items":
+				[
+					"dec urinary stream",
+					"erectile dysfunction",
+					"testicular mass"
+				]
+			},
+			{
+				"name":"Musculoskeletal",
+				"items":
+				[
+					"excessive joint pain",
+					"joint swelling",
+					"joint redness",
+					"bone pain",
+					"back pain",
+					"leg cramps"
+				]
+			},
+			{
+				"name":"Integumentary",
+				"items":
+				[
+					"rash",
+					"lumps",
+					"changing moles",
+					"itching",
+					"foot ulcers",
+					"abrasions or lacerations",
+					"alopecia",
+					"nail changes"
+				]
+			},
+			{
+				"name":"Neurologic",
+				"items":
+				[
+					"headaches",
+					"syncope",
+					"presyncope",
+					"weakness",
+					"tremor",
+					"irritability",
+					"dizziness",
+					"vertigo",
+					"paresthesias",
+					"gait problems",
+					"loss of consciousness",
+					"speech problems"
+				]
+			},
+			{
+				"name":"Psychiatric",
+				"items":
+				[
+					"confusion",
+					"nervousness",
+					"restlessness",
+					"anxiousness",
+					"depression",
+					"impaired recent memory",
+					"impaired remote memory",
+					"insomnia",
+					"hypersomnolence",
+					"obsessions",
+					"delusions",
+					"trouble concentrating"
+				]
+			},
+			{
+				"name":"Endocrine",
+				"items":
+				[
+					"excessive thirst",
+					"excessive urination",
+					"cold intolerance",
+					"heat intolerance",
+					"excessive sweating"
+				]
+			},
+			{
+				"name":"Hematologic",
+				"items":
+				[
+					"easy bruising or bleeding",
+					"epistaxis",
+					"enlarged lymph nodes"
+				]
+			},
+			{
+				"name":"Allergic/Immunologic",
+				"items":
+				[
+					"hives",
+					"clear nasal discharge",
+					"recurrent infections",
+					"sneezing"
+				]
+			}
+		];
+		
+        // CREATE TABLE.
+        table = document.createElement("table");
+		var tr = table.insertRow(-1);
+		var cell1;
+		var cell2;
+		cell1 = tr.insertCell(-1);
+		cell2 = tr.insertCell(-1);
+		cell1.innerHTML = "<img src='plus.png' style='visibility:hidden'>";
+		cell2.innerHTML = "<img src='minus.png' style='visibility:hidden'>";
+		tr.appendChild(cell1);
+		tr.appendChild(cell2);
+		
+        for (var i = 0; i < myRos.length; i++) {
+			var th = document.createElement("th");	// section as header
+			th.innerHTML = myRos[i].name;
+			tr = table.insertRow(-1); 				// adds row with 2 cells before the section header
+			cell1 = tr.insertCell(-1);
+			cell2 = tr.insertCell(-1);
+			cell1.innerHTML = "<img src='plus.png' style='visibility:hidden'>";
+			cell2.innerHTML = "<img src='minus.png' style='visibility:hidden'>";
+			tr.appendChild(cell1);
+			tr.appendChild(cell2); 
+            tr.appendChild(th);
+			
+		// adds rows for the items in each section
+			for (var j = 0; j < myRos[i].items.length; j++) {
+				var item = document.createElement("td");
+				item.innerHTML = myRos[i].items[j];
+				tr = table.insertRow(-1);
+				cell1 = tr.insertCell(-1);
+				cell2 = tr.insertCell(-1);
+				cell1.innerHTML = "<img src='plus.png' style='visibility:hidden'>";
+				cell2.innerHTML = "<img src='minus.png' style='visibility:hidden'>";
+				tr.appendChild(cell1);
+				tr.appendChild(cell2); 
+				tr.appendChild(item);
+            }
+        }
+
+        var divContainer = document.getElementById("showData");
+        divContainer.innerHTML = "";
+        divContainer.appendChild(table);
+		
+		if (table != null) {
+			for (var i = 0; i < table.rows.length; i++) {
+				for (var j = 0; j < 2; j++) {
+					table.rows[i].cells[j].onclick = (function (i, j) {
+						return function () {
+						
+							var visTest = /visible/g.test((this).innerHTML);
+							
+							if (i == 0) { // top row clicked
+								if (j == 0) { // clicked +
+									if (visTest) {
+										for (var k = 0; k < table.rows.length; k++) {
+											table.rows[k].cells[0].innerHTML = "<img src='plus.png' style='visibility:hidden'>";
+										}
+									} else {
+										for (var k = 0; k < table.rows.length; k++) {
+											table.rows[k].cells[0].innerHTML = "<img src='plus.png' style='visibility:visible'>";
+											table.rows[k].cells[1].innerHTML = "<img src='minus.png' style='visibility:hidden'>";
+										}
+									}
+								} else { // clicked -
+									if (visTest) {
+										for (var k = 0; k < table.rows.length; k++) {
+											table.rows[k].cells[1].innerHTML = "<img src='minus.png' style='visibility:hidden'>";
+										}
+									} else {
+										for (var k = 0; k < table.rows.length; k++) {
+											table.rows[k].cells[0].innerHTML = "<img src='plus.png' style='visibility:hidden'>";
+											table.rows[k].cells[1].innerHTML = "<img src='minus.png' style='visibility:visible'>";
+										}
+									}
+								}
+							} else {
+							
+								var sectionIndex = getSectionIndex(i);				// returns the section index
+								var numberItems = getNumberItemsinSection(i);		// returns the number items in that section
+								var visTest = /visible/g.test((this).innerHTML);
+								
+								if (isSectionHeader(i)) { 
+									if (visTest) { // set everything to hidden in the section
+										if (j == 0) { 
+											for (var k = i; k < i+numberItems+1; k++) {
+												table.rows[k].cells[0].innerHTML = "<img src='plus.png' style='visibility:hidden'>";
+											}	
+										} else { 	
+											for (var k = i; k < i+numberItems+1; k++) {
+												table.rows[k].cells[1].innerHTML = "<img src='minus.png' style='visibility:hidden'>";
+											}
+										}
+									} else { // set everything in that col to visible and other col to hidden  
+										if (j == 0) { 	// +	
+										
+											for (var k = i; k < i+numberItems+1; k++) {
+												table.rows[k].cells[0].innerHTML = "<img src='plus.png' style='visibility:visible'>";
+												table.rows[k].cells[1].innerHTML = "<img src='minus.png' style='visibility:hidden'>"
+											}	
+										} else { 	// -
+											
+											
+											for (var k = i; k < i+numberItems+1; k++) {
+												table.rows[k].cells[0].innerHTML = "<img src='plus.png' style='visibility:hidden'>";
+												table.rows[k].cells[1].innerHTML = "<img src='minus.png' style='visibility:visible'>";
+											}	
+											
+											
+											
+											//this.innerHTML = "<img src='minus.png' style='visibility:visible'>";
+											//table.rows[i].cells[0].innerHTML = "<img src='plus.png' style='visibility:hidden'>"
+										}
+									}
+								} else {
+									if (visTest){
+										if (j == 0) { 			// minus, visible
+											this.innerHTML = "<img src='plus.png' style='visibility:hidden'>";
+										} else { 					// plus, visible
+											this.innerHTML = "<img src='minus.png' style='visibility:hidden'>";
+										}
+									} else {  				// image hidden
+										//table.rows[i].cells[j].style.visibility="hidden";
+										if (j == 0) { 			// minus, hidden
+											this.innerHTML = "<img src='plus.png' style='visibility:visible'>";
+											table.rows[i].cells[1].innerHTML = "<img src='minus.png' style='visibility:hidden'>"
+										} else { 					// plus, hidden
+											this.innerHTML = "<img src='minus.png' style='visibility:visible'>";
+											table.rows[i].cells[0].innerHTML = "<img src='plus.png' style='visibility:hidden'>"
+										}
+									}
+								}
+							}
+						buildMessage();
+						}; 
+					}(i, j));
+				}
+			}
+		}		
+    }
+	
+	function buildMessage() {
+		msg = "";
+		var msgReports; 
+		var msgDenies;
+		var section;
+		for (var i = 0; i < table.rows.length; i++) {
+			// var sectionIndex = getSectionIndex(i);				// returns the section index
+			// var numberItems = getNumberItemsinSection(i);		// returns the number items in that section
+			if (i==0) {continue}
+			if (isSectionHeader(i)) {
+				section = table.rows[i].cells[2].innerHTML;
+				msgReports = "";
+				msgDenies = "";
+			} else {
+				var plusTest = /visible/g.test(table.rows[i].cells[0].innerHTML);
+				var minusTest = /visible/g.test(table.rows[i].cells[1].innerHTML);
+				if (plusTest) {
+					msgReports += table.rows[i].cells[2].innerHTML + ", ";
+				} 
+				if (minusTest) {
+					msgDenies += table.rows[i].cells[2].innerHTML + ", ";
+				}
+				if (isSectionHeader(i+1) || ((i+1) == table.rows.length)) {
+					if (msgReports || msgDenies) {
+						msg += "\n" + section + " - ";
+						section = "";
+					}
+					if (msgReports) {
+						msg += "REPORTS: " + msgReports.substring(0, msgReports.length - 2) + "; ";
+					}
+					if (msgDenies) {
+						msg += "denies: " + msgDenies.substring(0, msgDenies.length - 2) + "; ";
+					}
+				}
+			}
+		}
+		msg = msg.substring(0, msg.length - 2);
+		msg = msg.trim();
+		document.getElementById('msgbox').value = msg;	
+	}
+	
+	function getSectionIndex(row) {
+		r = 0;
+		for (var i = 0; i < myRos.length; i++) {
+			r += 1;
+			if (r == row) {
+				return i;
+			}
+			for (var j = 0; j < myRos[i].items.length; j++) {
+				r += 1;
+				if (r == row) {
+					return i;
+				}
+			}
+		}
+	}
+	
+	function getNumberItemsinSection(row) {
+		var sIndex = getSectionIndex(row);
+		return myRos[sIndex].items.length;
+	}
+	
+	function isSectionHeader(row) {
+		r = 0;
+		for (var i = 0; i < myRos.length; i++) {
+			r += 1;
+			if (r == row) {
+				return true;
+			}
+			for (var j = 0; j < myRos[i].items.length; j++) {
+				r += 1;
+				if (r == row) {
+					return false;
+				}
+			}
+		}	
+	}
+	
+	$("#copyButton").click(function(){
+		$("textarea").select();
+		document.execCommand('copy');
+	});
+	
+	$("#clearButton").click(function(){
+	    msg = "";
+	    document.getElementById('msgbox').value = msg;
+	    CreateTableFromJSON();
+	});
+	
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
