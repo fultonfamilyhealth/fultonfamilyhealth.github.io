@@ -48,14 +48,11 @@
 			<button id="cvROSButton">CV ROS</button>
 			<br>
 		</div>
-		<!--
-		<div class="cdButtons">
-			<button id="cvButton">CV ROS</button>
-			<button id="dmButton">DM ROS</button>
-		</div>
-		-->
 		<div class="box">
 			<textarea id="msgbox" rows="30" cols="35"></textarea>
+		</div>
+		<div class="checkbox">
+			<input type="checkbox" id="chronic" onchange="buildMessage()"> All positive responses chronic/stable<br>
 		</div>
 	</div>
 </body>
@@ -64,9 +61,7 @@
 	var table;		// global table
 	var myRos; 		// global myRos array
 	var msg; 
-	
-    function CreateTableFromJSON() {	
-		myRos = [
+	var myROS = [
 			{
 				"name":"General",
 				"items":
@@ -298,7 +293,7 @@
 				]
 			}
 		];
-		
+    function CreateTableFromJSON() {	
         // CREATE TABLE.
         table = document.createElement("table");
 		var tr = table.insertRow(-1);
