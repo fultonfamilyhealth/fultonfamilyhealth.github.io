@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,6 +49,12 @@
 			<button id="cvROSButton">CV ROS</button>
 			<br>
 		</div>
+		<!--
+		<div class="cdButtons">
+			<button id="cvButton">CV ROS</button>
+			<button id="dmButton">DM ROS</button>
+		</div>
+		-->
 		<div class="box">
 			<textarea id="msgbox" rows="30" cols="35"></textarea>
 		</div>
@@ -61,7 +68,7 @@
 	var table;		// global table
 	var myRos; 		// global myRos array
 	var msg; 
-	var myROS = [
+	var myRos = [
 			{
 				"name":"General",
 				"items":
@@ -293,6 +300,7 @@
 				]
 			}
 		];
+	
     function CreateTableFromJSON() {	
         // CREATE TABLE.
         table = document.createElement("table");
@@ -434,7 +442,6 @@
 		}		
     }
 	
-	
 	function limitedROS() {
 		var ct=0;
 		var lROS = ["chest pain", "weight loss", "changing moles", "blurry vision", "loss of hearing", "shortness of breath", "headaches", "melena", "rectal bleeding"]
@@ -503,6 +510,11 @@
 		}
 		msg = msg.substring(0, msg.length - 2);
 		msg = msg.trim();
+		if (document.getElementById('chronic').checked) {
+			if (msg.length > 1) {
+				msg += "\n\nAll positive responses are chronic and stable.";	
+			}
+		}
 		document.getElementById('msgbox').value = msg;	
 	}
 	
@@ -543,6 +555,7 @@
 		}	
 	}
 	
+	
 	$("#copyButton").click(function(){
 		$("textarea").select();
 		document.execCommand('copy');
@@ -551,6 +564,7 @@
 	$("#clearButton").click(function(){
 	    msg = "";
 	    document.getElementById('msgbox').value = msg;
+		document.getElementById('chronic').checked = false; 
 	    CreateTableFromJSON();
 	});
 	
@@ -571,7 +585,6 @@
 		cvROS();
 		
 	});
-	
 </script>
 </html>
 
