@@ -44,6 +44,8 @@
 		<div class="mainButtons">
 			<button id="copyButton">Copy Text</button>
 			<button id="clearButton">Clear</button>
+			<button id="limitedROSButton">Limited ROS</button>
+			<button id="cvROSButton">CV ROS</button>
 			<br>
 		</div>
 		<!--
@@ -437,6 +439,37 @@
 		}		
     }
 	
+	
+	function limitedROS() {
+		var ct=0;
+		var lROS = ["chest pain", "weight loss", "changing moles", "blurry vision", "loss of hearing", "shortness of breath", "headaches", "melena", "rectal bleeding"]
+		for (var i = 0; i < myRos.length; i++) {
+			ct +=1;
+			for (var j = 0; j < myRos[i].items.length; j++) {
+				ct +=1;
+				if ($.inArray(myRos[i].items[j], lROS) != -1) {
+					table.rows[ct].cells[1].innerHTML = "<img src='minus.png' style='visibility:visible'>"
+				}
+            }
+        }
+		buildMessage();
+	}
+	
+	function cvROS() {
+		var ct=0;
+		var cROS = ["chest pain", "shortness of breath", "dizziness", "edema", "headaches"]
+		for (var i = 0; i < myRos.length; i++) {
+			ct +=1;
+			for (var j = 0; j < myRos[i].items.length; j++) {
+				ct +=1;
+				if ($.inArray(myRos[i].items[j], cROS) != -1) {
+					table.rows[ct].cells[1].innerHTML = "<img src='minus.png' style='visibility:visible'>"
+				}
+            }
+        }
+		buildMessage();
+	}
+	
 	function buildMessage() {
 		msg = "";
 		var msgReports; 
@@ -524,6 +557,24 @@
 	    msg = "";
 	    document.getElementById('msgbox').value = msg;
 	    CreateTableFromJSON();
+	});
+	
+	$("#limitedROSButton").click(function(){
+		msg = "";
+	    document.getElementById('msgbox').value = msg;
+		document.getElementById('chronic').checked = false; 
+	    CreateTableFromJSON();
+		limitedROS();
+		
+	});
+	
+	$("#cvROSButton").click(function(){
+		msg = "";
+	    document.getElementById('msgbox').value = msg;
+		document.getElementById('chronic').checked = false; 
+	    CreateTableFromJSON();
+		cvROS();
+		
 	});
 	
 </script>
